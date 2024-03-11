@@ -2,3 +2,5 @@
 Diego Quezada Colorado A01710024
 
 Karina Fernanda Maldonado Murillo A01707516
+
+Emanuel Josue Vega Gonzalez A01710366
