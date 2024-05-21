@@ -1,16 +1,30 @@
-import os
+import sys
+import glob
+
+import serial#libreria pyserial
 
 def find_available_serial_ports() -> list[str]:
-    dev_files = os.listdir('/dev/')  # Obtener la lista de todos los archivos en /dev
-    serial_ports = []
-    for file in dev_files:
-        if file.startswith('ttyA'):
-            serial_ports.append('/dev/' + file)
-    return serial_ports
+    if sys.platform.startswith('win'): # Computadora windows
+        platform = 'win'
+        ports =[f'COM{i}' for i in range(1, 256)]
+    elif sys.platform.startswith('linux'): # Computadora Linux
+        platform = 'linux'
+        ports =glob.glob('/dev/tty[A-Za-z]*')
+    elif sys.platform.startswith('darwin'): # Mac
+        platform = 'darwin'
+        ports = glob.glob('/dev/tty.*')
+    else:
+        raise EnvironmentError('Unsupported Platform')
+    result = []
+    for port in ports:
+        early_stop = True if platform == 'win' else False
+        try:
+            s= serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            if early_stop:
+                break
+            continue
 
-serial = find_available_serial_ports()
-
-i = 0
-while i < len(serial):
-    print(serial[i])
-    i += 1
+    return result
