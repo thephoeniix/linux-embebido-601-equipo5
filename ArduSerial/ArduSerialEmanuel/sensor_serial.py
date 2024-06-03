@@ -45,11 +45,11 @@ class SensorSerial:
     def close(self):
         self.serial_connection.close()
     
-    def __del__(self):
+    def _del_(self):
         self.close()
     
 
-    def __str__(self) -> str:
+    def str(self) -> str:
         return f"SerialSensor({self.serial_connection}, {self.connection_time=}, {self.reception_time=})"
-    def __repr__(self) -> str:
+    def repr(self) -> str:
         return f"SerialSensor({self.serial_connection}, {self.connection_time=}, {self.reception_time=})"

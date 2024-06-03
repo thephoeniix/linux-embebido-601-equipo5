@@ -1,7 +1,7 @@
 import sys
 import glob
 
-import serial#libreria pyserial
+import serial#libreria pyserial 
 
 def find_available_serial_ports() -> list[str]:
     if sys.platform.startswith('win'): # Computadora windows
@@ -28,3 +28,7 @@ def find_available_serial_ports() -> list[str]:
             continue
 
     return result
+
+#python -m venv env
+#activar ambiente activate bat 
+#

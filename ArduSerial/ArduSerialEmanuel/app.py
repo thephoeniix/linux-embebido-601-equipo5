@@ -32,13 +32,14 @@ class App(Frame):
         self.pack(fill='both', expand=True)
 
         # Row 0 
-        self.serial_devices_combobox.grid(row=0, column=0)
-        self.refresh_serial_devices_button.grid(row=0, column=1)
-        self.baudrate_combobox.grid(row=0, column=2)
-        self.connect_serial_button.grid(row=0, column=3)
+        self.serial_devices_combobox.grid(row=0, column=0, padx=10, pady=5)
+        self.refresh_serial_devices_button.grid(row=1, column=0, padx=10, pady=5)
+        self.baudrate_combobox.grid(row=0, column=2, padx=10, pady=5)
+        self.connect_serial_button.grid(row=1, column=2, padx=10, pady=5)
         # Row 1
-        self.temperature_label.grid(row=1, column=0)
-        self.read_temperature_button.grid(row=1, column=1)
+        self.temperature_label.grid(row=2, column=3, padx=10, pady=5)
+        # Row 2 (Buttons moved here)
+        self.read_temperature_button.grid(row=3, column=3, padx=10, pady=5)
         #settings
         self.baudrate_combobox.current(0) 
     
@@ -47,67 +48,90 @@ class App(Frame):
         return Combobox(
             self, 
             values=ports, 
-            font=('Courier', 20)
+               font=("Arial", 12),  
         )
     
     def create_serial_devices_refresh_button(self) -> Button:
         return Button(
             self, 
             text='Refresh available serial devices', 
-            command=self.refresh_serial_devices
-        )
+            command=self.refresh_serial_devices, 
+            bg="LightSteelBlue4",
+            fg="black",
+            font=("Arial", 9),    
+            width=25
+        )   
+
     
     def create_baudrate_combobox(self,) -> Combobox:
         return Combobox(
             master=self,
-            values=['Baudrate'] + BAUDRATES
+            values=['Baudrate'] + BAUDRATES,
+                font=("Arial", 12),  
         )
     
     def create_connect_serial_button(self) -> Button:
         return Button(
             master=self,
             text='Connect',
-            command=self.create_sensor_serial
+            command=self.create_sensor_serial,
+             bg="LavenderBlush2",
+            fg="black",
+            font=("Arial", 9),    
+            width=20
         )
     
     def create_temperature_label(self)-> Label:
         return Label(
             master=self,
-            text='XX ºC',
-            font=('Courier', 20)
-        )
+            text= 'XX ºC',
+           font=("Arial", 12),          )
     
     def create_read_temperature_button(self)->Button:
         return Button(
             master=self, 
             text='Read Temperature',
-            command=self.read_temperature
+            command=self.read_temperature,
+             bg="gray",
+            fg="black",
+            font=("Arial", 9),    
+            width=20
         )
 
+    def create_serial_devices_refresh_button(self) -> Button:
+        button = Button(
+            self, 
+            text='Refresh', 
+            command=self.refresh_serial_devices,
+            bg='lightblue',
+            activebackground='lightblue'
+        )
+        return button
 
     def refresh_serial_devices(self):
         ports = find_available_serial_ports()
         self.serial_devices_combobox.selection_clear()
-        self.serial_devices_combobox['values'] = ports
+        self.serial_devices_combobox['values'] = ports 
     
     def create_sensor_serial(self)->SensorSerial:
         port = self.serial_devices_combobox.get()
         baudrate = self.baudrate_combobox.get()
 
         if port == '' or baudrate == 'Baudrate':
-            raise ValueError(f'Incorrect values for {port=} {baudrate=}')
+            raise ValueError(f'Incorrect values for: {port=} {baudrate=}')
         
         self.sensor_serial = SensorSerial(
             serial_port=port,
             baudrate=int(baudrate)
         )
+        
     def read_temperature(self)->None:
         if self.sensor_serial is not None:
             temperature = self.sensor_serial.send('TC2')
             self.temperature_label['text'] = temperature[:-3]
             return
-        raise RuntimeError("Serial connection has not been initialized.")
-
+        raise RuntimeError("Serial connection has not beeninitialized.")
+    
 root = Tk()
 
 
