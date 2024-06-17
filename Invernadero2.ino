@@ -54,11 +54,6 @@ void setup() {
 
 void loop() {
   unsigned long currentMillis = millis();
-  /*
-  if (Serial.available() > 0) {
-    char command = Serial.read();
-    handleSerialCommand(command);
-  }*/
 
   if (currentMode == AUTOMATIC && currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
